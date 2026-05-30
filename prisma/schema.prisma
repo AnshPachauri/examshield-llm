@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  // The url line has been intentionally removed for Prisma 7
+}
+
+model exam_runs {
+  id               String         @id @default(uuid())
+  original_url     String         
+  protected_url    String         
+  method_used      String         
+  intensity        Float          
+  created_at       DateTime       @default(now())
+  results          eval_results[]
+}
+
+model eval_results {
+  id               String         @id @default(uuid())
+  run_id           String
+  run              exam_runs      @relation(fields: [run_id], references: [id])
+  llm_model        String         
+  raw_response     String
+  is_refusal       Boolean        
+  ssim_score       Float          
+  created_at       DateTime       @default(now())
+}
